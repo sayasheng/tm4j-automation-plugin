@@ -20,6 +20,7 @@ public class Constants {
     public static final String FILE_PATH_IS_REQUIRED = "File path is required.";
     public static final String FILE_TARGET_IS_REQUIRED = "File target is required.";
     public static final String FORMAT_IS_REQUIRED = "The test framework is required.";
+    public static final String TEST_CYCLE_FOLDER_IS_REQUIRED = "The test cycle folder is required.";
     public static final String THERE_ARE_NO_JIRA_INSTANCES_CONFIGURED = "There are no Jira instances configured. Please, go to Jenkins global configurations and add some Jira instances.";
     public static final String JIRA_INSTANCE_NOT_FOUND = "Jira instance not found for this server address {0}";
     public static final String ERROR_AT_GLOBAL_CONFIGURATIONS_OF_TEST_MANAGEMENT_FOR_JIRA = "Error at global configurations of Zephyr Scale: {0}";

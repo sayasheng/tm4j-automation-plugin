@@ -34,4 +34,10 @@ public class Validator {
             throw new Exception(SERVER_URL_IS_REQUIRED);
         return this;
     }
+
+    public Validator validateTestCycleFolder(String testCycleFolder) throws Exception {
+    	if(isEmpty(testCycleFolder))
+	   throw new Exception(TEST_CYCLE_FOLDER_IS_REQUIRED);
+	return this;
+    }
 }

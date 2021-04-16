@@ -42,13 +42,15 @@ public class TestResultPublisher extends Notifier implements SimpleBuildStep {
     private String projectKey;
     private String filePath;
     private String format;
+    private String testCycleFolder;
     private Boolean autoCreateTestCases;
 
     @DataBoundConstructor
-    public TestResultPublisher(String serverAddress, String projectKey, String filePath, Boolean autoCreateTestCases, String format) {
+    public TestResultPublisher(String serverAddress, String projectKey, String filePath, String testCycleFolder, Boolean autoCreateTestCases, String format) {
         this.serverAddress = serverAddress;
         this.projectKey = projectKey;
         this.filePath = filePath;
+        this.testCycleFolder = testCycleFolder;
         this.autoCreateTestCases = autoCreateTestCases;
         this.format = format;
     }
@@ -81,13 +83,21 @@ public class TestResultPublisher extends Notifier implements SimpleBuildStep {
         new Validator().validateProjectKey(this.projectKey)
                     .validateFilePath(this.filePath)
                     .validateFormat(this.format)
+                    .validateTestCycleFolder(this.testCycleFolder)
                     .validateServerAddress(this.serverAddress);
         Tm4jJiraRestClient tm4jJiraRestClient = new Tm4jJiraRestClient(jiraInstances, this.serverAddress);
+        //Create a test cycle folder for saving uploaded result
+        tm4jJiraRestClient.createTestCycleFolder(this.projectKey, this.testCycleFolder, logger);
+        
+        //push test report to Zephyr Scale in Jira
         if (Constants.CUCUMBER.equals(this.format)) {
             tm4jJiraRestClient.uploadCucumberFile(directory, this.filePath, this.projectKey, this.autoCreateTestCases, logger);
         } else {
             tm4jJiraRestClient.uploadCustomFormatFile(directory, this.projectKey, this.autoCreateTestCases, logger);
         }
+        
+       //update the new created test cycle details
+        tm4jJiraRestClient.updateTestCycle(logger);
     }
 
     private String getDirectory(FilePath workspace, Run run) throws IOException, InterruptedException {
@@ -136,6 +146,14 @@ public class TestResultPublisher extends Notifier implements SimpleBuildStep {
         this.format = format;
     }
 
+    public String getTestCycleFolder(){
+	return testCycleFolder;
+    }
+
+    public void setTestCycleFolder(String testCycleFolder){
+    	this.testCycleFolder = testCycleFolder;
+    }			
+    
     public Boolean getAutoCreateTestCases() {
         return autoCreateTestCases;
     }

@@ -19,7 +19,7 @@ public class JiraInstance implements Instance {
     private static final String CUSTOM_FORMAT_ENDPOINT = "{0}/rest/atm/1.0/automation/execution/{1}";
     private static final String FEATURE_FILES_ENDPOINT = "{0}/rest/atm/1.0/automation/testcases";
     private static final String TM4J_HEALTH_CHECK = "{0}/rest/atm/1.0/healthcheck/";
-
+   
     private String serverAddress;
     private String username;
     private Secret password;
@@ -85,6 +85,21 @@ public class JiraInstance implements Instance {
         return importBuildResultsFile(autoCreateTestCases, zip, url);
     }
 
+    @Override
+    public HttpResponse<JsonNode> createTestCycleFolder(String projectKey, String testCycleFolder) throws UnirestException {
+    	return null;
+    }
+    
+    @Override
+    public HttpResponse<JsonNode> getTestCycle(String testCycleKey) throws UnirestException{
+    	return null;
+    }
+    
+    @Override
+    public HttpResponse<JsonNode> updateTestCycle(String testCycleKey, JsonNode json) throws UnirestException{
+    	return null;
+    }
+    
     public String getServerAddress() {
         return serverAddress;
     }

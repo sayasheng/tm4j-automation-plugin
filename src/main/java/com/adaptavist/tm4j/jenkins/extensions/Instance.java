@@ -20,4 +20,9 @@ public interface Instance {
 
     HttpResponse<String> downloadFeatureFile(String projectKey) throws UnirestException;
 
+    HttpResponse<JsonNode> createTestCycleFolder(String projectKey, String testCycleFolder) throws UnirestException;
+    
+    HttpResponse<JsonNode> getTestCycle(String testCycleKey) throws UnirestException;
+    
+    HttpResponse<JsonNode> updateTestCycle(String testCycleKey, JsonNode json) throws UnirestException;
 }

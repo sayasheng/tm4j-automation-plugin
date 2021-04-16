@@ -22,7 +22,10 @@ public class JiraCloudInstance implements Instance {
     private static final String FEATURE_FILES_ENDPOINT = "{0}/tm4j/v2/automations/testcases";
     private static final String TM4J_HEALTH_CHECK = "{0}/tm4j/v2/healthcheck";
     private static final String TM4J_API_BASE_URL = "https://api.adaptavist.io";
-
+    private static final String CREATE_TEST_CYCLE_FOLDER_ENDPOINT = "{0}/tm4j/v2/folders";
+    private static final String GET_TEST_CYCLE_ENDPOINT = "{0}/tm4j/v2/testcycles";
+    private static final String UPDATE_TEST_CYCLE_ENDPOINT = "{0}/tm4j/v2/testcycles";
+    
     private Secret jwt;
     private String name;
 
@@ -98,6 +101,48 @@ public class JiraCloudInstance implements Instance {
                 .asString();
     }
 
+    @Override
+    public HttpResponse<JsonNode> createTestCycleFolder(String projectKey, String testCycleFolder) throws UnirestException {
+    	String url = MessageFormat.format(CREATE_TEST_CYCLE_FOLDER_ENDPOINT, TM4J_API_BASE_URL);
+    	HttpClient httpClient = HttpClientBuilder.create().disableCookieManagement().build();
+    	Unirest.setHttpClient(httpClient);
+    	String json = "{"+
+    	                        "\"parentId\"" +":"+ "null" +"," +
+    			                "\"name\"" +":" +"\""+testCycleFolder+"\"" + "," +
+    			                "\"projectKey\"" + ":" + "\"" + projectKey +"\"" + "," +
+    			                "\"folderType\"" + ":" + "\"" + "TEST_CYCLE" +"\"" +
+    			              "}" ;
+    	
+    	return Unirest.post(url)
+    			.header("Authorization", "Bearer " + getDecryptedJwt())
+    			.header("Content-Type", "application/json")
+    			.body(json)
+    			.asJson();
+    }
+    
+    @Override
+    public HttpResponse<JsonNode> getTestCycle(String testCycleKey) throws UnirestException{
+    	String url = MessageFormat.format(GET_TEST_CYCLE_ENDPOINT, TM4J_API_BASE_URL) +"/" +  testCycleKey;
+        HttpClient httpClient = HttpClientBuilder.create().disableCookieManagement().build();
+        Unirest.setHttpClient(httpClient);
+        return Unirest.get(url)
+                .header("Authorization", "Bearer " + getDecryptedJwt())
+                .asJson();
+    }
+    
+    @Override
+    public HttpResponse<JsonNode> updateTestCycle(String testCycleKey, JsonNode json) throws UnirestException{
+    	String url = MessageFormat.format(UPDATE_TEST_CYCLE_ENDPOINT, TM4J_API_BASE_URL) +"/" +  testCycleKey;
+        HttpClient httpClient = HttpClientBuilder.create().disableCookieManagement().build();
+        Unirest.setHttpClient(httpClient);
+        return Unirest.put(url)
+        		.header("Authorization", "Bearer " + getDecryptedJwt())
+        		.header("Content-Type", "application/json")
+        		.body(json.toString())
+        		.asJson();
+    }
+    
+    
     public Secret getJwt() {
         return jwt;
     }
